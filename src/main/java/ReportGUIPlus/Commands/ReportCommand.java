@@ -9,7 +9,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class ReportCommand implements CommandExecutor {
+
+    private ArrayList<Player> players = new ArrayList<Player>();
 
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if(!(sender instanceof Player)) return false;
@@ -34,8 +39,12 @@ public class ReportCommand implements CommandExecutor {
             return true;
         }
 
-        Inventory inventory = new ReportInventory(player, reportedPlayer).getInventory();
-
+        //if(players.contains(player)){
+            Inventory inventory = new ReportInventory(player, reportedPlayer).getInventory();
+        /*}else{
+            Inventory inventory = new ReportInventory(player, reportedPlayer, true).getInventory();
+            players.add(player);
+        }*/
 
         return true;
     }

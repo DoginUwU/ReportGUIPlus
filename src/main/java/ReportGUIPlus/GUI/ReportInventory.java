@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -45,6 +47,7 @@ public class ReportInventory implements Listener {
 
         Bukkit.getPluginManager().registerEvents(this, ReportGUIPlus.getInstance());
 
+
         player.openInventory(inventory);
     }
 
@@ -75,6 +78,11 @@ public class ReportInventory implements Listener {
     }
 
     @EventHandler
+    public void OnClose(InventoryCloseEvent e){
+        PlayerInteractEvent.getHandlerList().unregisterAll(this);
+    }
+
+    @EventHandler
     public void ReportGUI(InventoryClickEvent e){
         if(!e.getInventory().getName().equalsIgnoreCase("§8Menu - Denunciar")) return;
 
@@ -100,23 +108,28 @@ public class ReportInventory implements Listener {
                 if(resultSet.next()){
                     player.sendMessage(tag + " §fVocê já enviou uma denuncia deste jogador!");
                     return;
-                }
+                }else if(reports.isEmpty() || reports.get(0) == ""){
+                    player.sendMessage(tag + " §fVocê precisa selecionar ao menos um motivo!");
+                    return;
+                }else{
+                    ps = connection.prepareStatement("INSERT INTO reports VALUES ('"+player.getUniqueId().toString()+"', '"+UUID.toString()+"', '"+reports.toString()+"', '"+new Timestamp(System.currentTimeMillis())+"')");
+                    ps.execute();
+                    ps.close();
 
-                if(reports.isEmpty()){
+                    player.closeInventory();
+
+                    player.sendMessage(tag + " §fSua denuncia foi enviada com sucesso!");
+                    sendMessageForAllStaff();
                     return;
                 }
 
-                ps = connection.prepareStatement("INSERT INTO reports VALUES ('"+player.getUniqueId().toString()+"', '"+UUID.toString()+"', '"+reports.toString()+"', '"+new Timestamp(System.currentTimeMillis())+"')");
-                ps.execute();
-                ps.close();
 
-                player.closeInventory();
-
-                player.sendMessage(tag + " §fSua denuncia foi enviada com sucesso!");
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
+                return;
             } catch (ClassNotFoundException classNotFoundException) {
                 classNotFoundException.printStackTrace();
+                return;
             }
 
         }
@@ -130,6 +143,7 @@ public class ReportInventory implements Listener {
             item.setItemMeta(itemMeta);
 
             reports.add(key);
+            return;
         }else if(String.valueOf(itemMeta.getLore()).contains("§aselecionado")){
             item = Heads.updateSkullByBase64(item, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWZkZTNiZmNlMmQ4Y2I3MjRkZTg1NTZlNWVjMjFiN2YxNWY1ODQ2ODRhYjc4NTIxNGFkZDE2NGJlNzYyNGIifX19");
             itemMeta = item.getItemMeta();
@@ -139,6 +153,18 @@ public class ReportInventory implements Listener {
             item.setItemMeta(itemMeta);
 
             reports.remove(key);
+            return;
+        }
+    }
+
+    public void sendMessageForAllStaff(){
+        for (Player player : Bukkit.getOnlinePlayers()){
+            if(player.hasPermission("reportguiplus.admin")){
+                player.sendMessage("§3=-=-=-=-=-=-=-=-=-=-=-=-=");
+                player.sendMessage("§fNova denuncia enviada!");
+                player.sendMessage("§fUse §2/reports §fpara ver");
+                player.sendMessage("§3=-=-=-=-=-=-=-=-=-=-=-=-=");
+            }
         }
     }
 }
