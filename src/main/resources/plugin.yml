@@ -1,0 +1,23 @@
+main: ReportGUIPlus.ReportGUIPlus
+name: ReportGUIPlus
+version: 0.01
+author: DoginUwU
+description: Um sistema de /report usando GUI e MySQL
+database: true
+prefix: report
+permissions:
+  reportguiplus.report:
+    default: true
+    description: Permissão para /report
+  reportguiplus.admin:
+    default: op
+    description: Permissão para ver /reports
+commands:
+  report:
+    permission: reportguiplus.report
+    permission-message: '§cVocê não tem permissão para executar este comando'
+    usage: /report <nome>
+  reports:
+    permission: reportguiplus.admin
+    permission-message: '§cVocê não tem permissão para executar este comando'
+    usage: /reports

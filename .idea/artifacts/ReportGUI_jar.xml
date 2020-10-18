@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ReportGUI:jar">
+    <output-path>$USER_HOME$/Desktop/Testes/Test/plugins</output-path>
+    <root id="archive" name="ReportGUI.jar">
+      <element id="module-output" name="ReportGUI" />
+    </root>
+  </artifact>
+</component>

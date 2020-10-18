@@ -1,0 +1,23 @@
+mysql:
+  host: 'localhost'
+  username: 'root'
+  password: ''
+  database: 'reports'
+  port: 3306
+  table: 'reports'
+
+configs:
+  tag: '&f[&cReport&f]'
+
+texts:
+  ReportUsage: '&4Uso incorreto! Use /report <jogador>'
+  UserNotFound: '&4Jogador não encontrado! Você escreveu o nick certo?'
+  ReportMe: '&4Você não pode se denunciar!'
+
+reports:
+  Fly:
+    description: '&7Usado para o player conseguir voar'
+    slot: 11
+  AntiFall:
+    description: '&7Impede que o jogador consiga cair'
+    slot: 12
