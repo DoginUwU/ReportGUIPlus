@@ -1,6 +1,6 @@
 main: ReportGUIPlus.ReportGUIPlus
 name: ReportGUIPlus
-version: 0.03
+version: 0.04
 author: DoginUwU
 description: Um sistema de /report usando GUI e MySQL
 database: true

@@ -1,0 +1,48 @@
+ReportsInventory:
+  name: '&8Menu - Denuncias'
+  playerIsON:  '&eJogador está online, botão direito para se teleportar até ele.'
+  ReportedBy: '&7Reportado por: &a'
+  SendOn: '&7Enviado em: &a'
+  Reasons: '&7Motivos da denuncia: &5'
+  UseLeftClick: '&7Use botão esquerdo para apagar a denuncia'
+  UseMiddleClick: '&7Use botão do meio para ver outras opções'
+  OfflinePlayer: '&fDesculpe, mas o jogador se encontra offline!'
+  error: '&4Deculpe, algo deu errado'
+  SuccessfullyDelete: '&fDenuncia apagada com sucesso!'
+
+ReportInventory:
+  name: '&8Menu - Denunciar'
+  playerInfo: '&6Informações do jogador'
+  reported: '&fReportado: &7'
+  ClickToReport: '&eClique aqui para reportar o jogador!'
+  AlreadySend: '&fVocê já enviou uma denuncia deste jogador!'
+  ReasonsNotFound: '&fVocê precisa selecionar ao menos um motivo!'
+  SuccessfullySend: '&fSua denuncia foi enviada com sucesso!'
+  Selected: '&aselecionado'
+  Deselected: '&cdesselecionado'
+  adminReport:
+    - '&3=-=-=-=-=-=-=-=-=-=-=-=-='
+    - '&fNova denuncia enviada!'
+    - '&fUse &2/reports &fpara ver'
+    - '&3=-=-=-=-=-=-=-=-=-=-=-=-='
+
+OptionsReportedInventory:
+  name: '&8Menu - '
+  teleportPlayer: '&6&lTeleportar jogador'
+  openInventory: '&9&lVer inventario'
+  BanUser: '&c&lBanir jogador'
+  VerifedUser: '&a&lUsuario verificado'
+  error: '&4Deculpe, algo deu errado'
+  BanReason: 'Você foi banido por uso de: &5'
+  banSuccessfully: '&fUsuario banido com sucesso!'
+  VerifedUserSuccessfully: '&fUsuario verificado com sucesso!'
+  adminReport:
+    - '&3=-=-=-=-=-=-=-=-=-=-=-=-='
+    - '&fSua denuncia estava correta'
+    - '&fJogador banido: &6%ban_user%' ##%ban_user% pega o jogador banido
+    - '&3=-=-=-=-=-=-=-=-=-=-=-=-='
+    - '&fVocê irá receber uma recompensa por isso %recompense%' ##Só adicione essa linha caso use recompensas (Necessario %recompense%)
+  wrongReport:
+      - '&3=-=-=-=-=-=-=-=-=-=-=-=-='
+      - '&fSua denuncia foi negada'
+      - '&3=-=-=-=-=-=-=-=-=-=-=-=-='

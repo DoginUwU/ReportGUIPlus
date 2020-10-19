@@ -33,14 +33,14 @@ public class ReportInventory implements Listener {
         this.player = player;
         this.reportedPlayer = reportedPlayer;
 
-        inventory = Bukkit.createInventory(null, 5 * 9, "§8Menu - Denunciar");
+        inventory = Bukkit.createInventory(null, 5 * 9, ReportGUIPlus.getStringLangConfig("ReportInventory.name"));
 
         AddReportsType();
 
         ItemStack continueItem = Heads.createSkullByNickname(reportedPlayer.getName());
         ItemMeta continueItemMeta = continueItem.getItemMeta();
-        continueItemMeta.setDisplayName("§6Informações do jogador");
-        continueItemMeta.setLore(Arrays.asList("§fReportado: §7" + reportedPlayer.getName(), "", "", "§eClique aqui para reportar o jogador!"));
+        continueItemMeta.setDisplayName(ReportGUIPlus.getStringLangConfig("ReportInventory.playerInfo"));
+        continueItemMeta.setLore(Arrays.asList(ReportGUIPlus.getStringLangConfig("ReportInventory.reported") + reportedPlayer.getName(), "", "", ReportGUIPlus.getStringLangConfig("ReportInventory.ClickToReport")));
         continueItem.setItemMeta(continueItemMeta);
 
         inventory.setItem(40, continueItem);
@@ -59,7 +59,7 @@ public class ReportInventory implements Listener {
             ItemMeta itemMeta = item.getItemMeta();
 
             itemMeta.setDisplayName("§4" + key);
-            itemMeta.setLore(Arrays.asList(ReportGUIPlus.getInstance().getConfig().getString("reports." + key + ".description").replace("&", "§"), "§cdesselecionado"));
+            itemMeta.setLore(Arrays.asList(ReportGUIPlus.getInstance().getConfig().getString("reports." + key + ".description").replace("&", "§"), ReportGUIPlus.getStringLangConfig("ReportInventory.Deselected")));
 
 
             item.setItemMeta(itemMeta);
@@ -88,7 +88,7 @@ public class ReportInventory implements Listener {
 
     @EventHandler
     public void ReportGUI(InventoryClickEvent e){
-        if(!e.getInventory().getName().equalsIgnoreCase("§8Menu - Denunciar")) return;
+        if(!e.getInventory().getName().equalsIgnoreCase(ReportGUIPlus.getStringLangConfig("ReportInventory.name"))) return;
 
         if(inventory.getItem(e.getSlot()) == null) return;
 
@@ -99,7 +99,7 @@ public class ReportInventory implements Listener {
 
         String tag = ReportGUIPlus.getInstance().getConfig().getString("configs.tag").replace("&", "§");
 
-        if(String.valueOf(itemMeta.getDisplayName()).contains("§6Informações do jogador")){
+        if(String.valueOf(itemMeta.getDisplayName()).contains(ReportGUIPlus.getStringLangConfig("ReportInventory.playerInfo"))){
             try {
                 ReportGUIPlus.getMysql().openConnection();
                 Connection connection = ReportGUIPlus.getMysql().getConnection();
@@ -110,10 +110,10 @@ public class ReportInventory implements Listener {
                 ResultSet resultSet = ps.executeQuery();
 
                 if(resultSet.next()){
-                    player.sendMessage(tag + " §fVocê já enviou uma denuncia deste jogador!");
+                    player.sendMessage(tag + " " + ReportGUIPlus.getStringLangConfig("ReportInventory.AlreadySend"));
                     return;
                 }else if(reports.isEmpty() || reports.get(0) == ""){
-                    player.sendMessage(tag + " §fVocê precisa selecionar ao menos um motivo!");
+                    player.sendMessage(tag + " " + ReportGUIPlus.getStringLangConfig("ReportInventory.ReasonsNotFound"));
                     return;
                 }else{
                     ps = connection.prepareStatement("INSERT INTO reports VALUES ('"+player.getUniqueId().toString()+"', '"+UUID.toString()+"', '"+reports.toString()+"', '"+new Timestamp(System.currentTimeMillis())+"')");
@@ -122,7 +122,7 @@ public class ReportInventory implements Listener {
 
                     player.closeInventory();
 
-                    player.sendMessage(tag + " §fSua denuncia foi enviada com sucesso!");
+                    player.sendMessage(tag + " " + ReportGUIPlus.getStringLangConfig("ReportInventory.SuccessfullySend"));
                     sendMessageForAllStaff();
                     return;
                 }
@@ -138,22 +138,22 @@ public class ReportInventory implements Listener {
 
         }
 
-        if(String.valueOf(itemMeta.getLore()).contains("§cdesselecionado")){
+        if(String.valueOf(itemMeta.getLore()).contains(ReportGUIPlus.getStringLangConfig("ReportInventory.Deselected"))){
             item = Heads.updateSkullByBase64(item, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjJkMTQ1YzkzZTVlYWM0OGE2NjFjNmYyN2ZkYWZmNTkyMmNmNDMzZGQ2MjdiZjIzZWVjMzc4Yjk5NTYxOTcifX19");
             itemMeta = item.getItemMeta();
             String key = item.getItemMeta().getDisplayName().replace("§4", "");
 
-            itemMeta.setLore(Arrays.asList(ReportGUIPlus.getInstance().getConfig().getString("reports." + key + ".description").replace("&", "§"), "§aselecionado"));
+            itemMeta.setLore(Arrays.asList(ReportGUIPlus.getInstance().getConfig().getString("reports." + key + ".description").replace("&", "§"), ReportGUIPlus.getStringLangConfig("ReportInventory.Selected")));
             item.setItemMeta(itemMeta);
 
             reports.add(key);
             return;
-        }else if(String.valueOf(itemMeta.getLore()).contains("§aselecionado")){
+        }else if(String.valueOf(itemMeta.getLore()).contains(ReportGUIPlus.getStringLangConfig("ReportInventory.Selected"))){
             item = Heads.updateSkullByBase64(item, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWZkZTNiZmNlMmQ4Y2I3MjRkZTg1NTZlNWVjMjFiN2YxNWY1ODQ2ODRhYjc4NTIxNGFkZDE2NGJlNzYyNGIifX19");
             itemMeta = item.getItemMeta();
             String key = item.getItemMeta().getDisplayName().replace("§4", "");
 
-            itemMeta.setLore(Arrays.asList(ReportGUIPlus.getInstance().getConfig().getString("reports." + key + ".description").replace("&", "§"), "§cdesselecionado"));
+            itemMeta.setLore(Arrays.asList(ReportGUIPlus.getInstance().getConfig().getString("reports." + key + ".description").replace("&", "§"), ReportGUIPlus.getStringLangConfig("ReportInventory.Deselected")));
             item.setItemMeta(itemMeta);
 
             reports.remove(key);
@@ -164,10 +164,9 @@ public class ReportInventory implements Listener {
     public void sendMessageForAllStaff(){
         for (Player player : Bukkit.getOnlinePlayers()){
             if(player.hasPermission("reportguiplus.admin")){
-                player.sendMessage("§3=-=-=-=-=-=-=-=-=-=-=-=-=");
-                player.sendMessage("§fNova denuncia enviada!");
-                player.sendMessage("§fUse §2/reports §fpara ver");
-                player.sendMessage("§3=-=-=-=-=-=-=-=-=-=-=-=-=");
+                for (String text : ReportGUIPlus.getLangConfig().getStringList("ReportInventory.adminReport")){
+                    player.sendMessage(text.replace("&", "§"));
+                }
             }
         }
     }

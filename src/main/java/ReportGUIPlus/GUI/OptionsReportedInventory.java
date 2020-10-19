@@ -35,16 +35,16 @@ public class OptionsReportedInventory implements Listener {
         this.reportedPlayer = reportedPlayer;
         this.playerSender = playerSender;
         this.reasons = reasons;
-        inventory = Bukkit.createInventory(null, 3 * 9, "§8Menu - " + reportedPlayer.getName());
+        inventory = Bukkit.createInventory(null, 3 * 9, ReportGUIPlus.getStringLangConfig("OptionsReportedInventory.name") + reportedPlayer.getName());
 
         player.openInventory(inventory);
 
         Bukkit.getPluginManager().registerEvents(this, ReportGUIPlus.getInstance());
 
-        createOptions(Material.ENDER_PEARL, (short)0,"§6§lTeleportar jogador", Collections.singletonList("§7Teleporte o player até você"),10);
-        createOptions(Material.CHEST, (short)0,"§9§lVer inventario", Collections.singletonList("§7Veja o inventario do jogador selecionado"),12);
-        createOptions(Material.STAINED_CLAY, (short)14,"§c§lBanir jogador", Arrays.asList("§7Dê ban permanente no jogador", " §7* A razão do ban será a mesma do reporte"),14);
-        createOptions(Material.STAINED_CLAY, (short)13,"§a§lUsuario verificado", Arrays.asList("§7Use caso você tenha certeza que ele está legitmo", " §7* Uma mensagem de rejeição será enviada para o jogador que o reportou"),16);
+        createOptions(Material.ENDER_PEARL, (short)0,ReportGUIPlus.getStringLangConfig("OptionsReportedInventory.teleportPlayer"), Collections.singletonList(""),10);
+        createOptions(Material.CHEST, (short)0,ReportGUIPlus.getStringLangConfig("OptionsReportedInventory.openInventory"), Collections.singletonList(""),12);
+        createOptions(Material.STAINED_CLAY, (short)14,ReportGUIPlus.getStringLangConfig("OptionsReportedInventory.BanUser"), Arrays.asList(""),14);
+        createOptions(Material.STAINED_CLAY, (short)13,ReportGUIPlus.getStringLangConfig("OptionsReportedInventory.VerifedUser"), Arrays.asList(""),16);
     }
 
     private void createOptions(Material material, short type, String name, List<String> lore, int slot){
@@ -80,7 +80,7 @@ public class OptionsReportedInventory implements Listener {
 
     @EventHandler
     public void ReportGUI(InventoryClickEvent e) {
-        if (!e.getInventory().getName().equalsIgnoreCase("§8Menu - " + reportedPlayer.getName())) return;
+        if (!e.getInventory().getName().equalsIgnoreCase(ReportGUIPlus.getStringLangConfig("OptionsReportedInventory.name") + reportedPlayer.getName())) return;
 
         if (inventory.getItem(e.getSlot()) == null) return;
 
@@ -91,27 +91,27 @@ public class OptionsReportedInventory implements Listener {
 
         String tag = ReportGUIPlus.getInstance().getConfig().getString("configs.tag").replace("&", "§");
 
-        if(String.valueOf(itemMeta.getDisplayName()).contains("§6§lTeleportar jogador")){
+        if(String.valueOf(itemMeta.getDisplayName()).contains(ReportGUIPlus.getStringLangConfig("OptionsReportedInventory.teleportPlayer"))){
             if(reportedPlayer == null){
-                player.sendMessage(tag + " §4Desculpe, algo deu errado!");
+                player.sendMessage(tag + " " + ReportGUIPlus.getStringLangConfig("OptionsReportedInventory.error"));
                 return;
             }
             if(reportedPlayer.isOnline()){
                 reportedPlayer.teleport(player);
                 player.closeInventory();
             }
-        }else if(String.valueOf(itemMeta.getDisplayName()).contains("§9§lVer inventario")){
+        }else if(String.valueOf(itemMeta.getDisplayName()).contains(ReportGUIPlus.getStringLangConfig("OptionsReportedInventory.openInventory"))){
             if(reportedPlayer == null){
-                player.sendMessage(tag + " §4Desculpe, algo deu errado!");
+                player.sendMessage(tag + " " + ReportGUIPlus.getStringLangConfig("OptionsReportedInventory.error"));
                 return;
             }
             if(reportedPlayer.isOnline()){
                 player.closeInventory();
                 player.openInventory(reportedPlayer.getInventory());
             }
-        }else if(String.valueOf(itemMeta.getDisplayName()).contains("§c§lBanir jogador")){
+        }else if(String.valueOf(itemMeta.getDisplayName()).contains(ReportGUIPlus.getStringLangConfig("OptionsReportedInventory.BanUser"))){
             if(reportedPlayer == null || playerSender == null){
-                player.sendMessage(tag + " §4Desculpe, algo deu errado!");
+                player.sendMessage(tag + " " + ReportGUIPlus.getStringLangConfig("OptionsReportedInventory.error"));
                 return;
             }
 
@@ -125,18 +125,18 @@ public class OptionsReportedInventory implements Listener {
                     ps.execute();
                     ps.close();
 
-                    reportedPlayer.kickPlayer(tag + " Você foi banido por uso de: §5" + reasons);
+                    reportedPlayer.kickPlayer(tag + " " + ReportGUIPlus.getStringLangConfig("OptionsReportedInventory.BanReason") + reasons);
                     Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "ban " + reportedPlayer.getName());
                     player.closeInventory();
-                    player.sendMessage(tag + "§fUsuario banido com sucesso!");
+                    player.sendMessage(tag + " " + ReportGUIPlus.getStringLangConfig("OptionsReportedInventory.banSuccessfully"));
                     if(playerSender.isOnline()){
-                        playerSender.sendMessage("§3=-=-=-=-=-=-=-=-=-=-=-=-=");
-                        playerSender.sendMessage("§fSua denuncia estava correta!");
-                        playerSender.sendMessage("§fJogador banido: §6" + reportedPlayer.getName());
-                        if(ReportGUIPlus.getInstance().getConfig().getString("configs.recompense") != null && ReportGUIPlus.getInstance().getConfig().getString("configs.recompense") != ""){
-                            playerSender.sendMessage("§fVocê irá receber uma recompensa por isso");
+                        for (String text : ReportGUIPlus.getLangConfig().getStringList("OptionsReportedInventory.adminReport")){
+                            if(text.contains("%recompense%") && ReportGUIPlus.getInstance().getConfig().getString("configs.recompense") != null && ReportGUIPlus.getInstance().getConfig().getString("configs.recompense") != ""){
+                                player.sendMessage(text.replace("&", "§").replace("%ban_user%", reportedPlayer.getName()));
+                            }else{
+                                player.sendMessage(text.replace("&", "§").replace("%ban_user%", reportedPlayer.getName()));
+                            }
                         }
-                        playerSender.sendMessage("§3=-=-=-=-=-=-=-=-=-=-=-=-=");
                     }
                     Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), ReportGUIPlus.getInstance().getConfig().getString("configs.recompense").replace("%nick%", playerSender.getName()));
                     return;
@@ -147,9 +147,9 @@ public class OptionsReportedInventory implements Listener {
                 classNotFoundException.printStackTrace();
             }
 
-           }else if(String.valueOf(itemMeta.getDisplayName()).contains("§a§lUsuario verificado")){
+           }else if(String.valueOf(itemMeta.getDisplayName()).contains(ReportGUIPlus.getStringLangConfig("OptionsReportedInventory.VerifedUser"))){
             if(reportedPlayer == null || playerSender == null){
-                player.sendMessage(tag + " §4Desculpe, algo deu errado!");
+                player.sendMessage(tag + " " + ReportGUIPlus.getStringLangConfig("OptionsReportedInventory.error"));
                 return;
             }
 
@@ -164,11 +164,11 @@ public class OptionsReportedInventory implements Listener {
                     ps.close();
 
                     player.closeInventory();
-                    player.sendMessage(tag + " §fDenuncia verificada com sucesso!");
+                    player.sendMessage(tag + " " + ReportGUIPlus.getStringLangConfig("OptionsReportedInventory.VerifedUserSuccessfully"));
                     if(playerSender.isOnline()){
-                        playerSender.sendMessage("§3=-=-=-=-=-=-=-=-=-=-=-=-=");
-                        playerSender.sendMessage("§fSua denuncia foi negada!");
-                        playerSender.sendMessage("§3=-=-=-=-=-=-=-=-=-=-=-=-=");
+                        for (String text : ReportGUIPlus.getLangConfig().getStringList("OptionsReportedInventory.wrongReport")){
+                            player.sendMessage(text.replace("&", "§"));
+                        }
                     }
                     return;
                 }

@@ -27,7 +27,7 @@ public class ReportsInventory implements Listener {
 
     public ReportsInventory(Player player) {
         this.player = player;
-        inventory = Bukkit.createInventory(null, 5 * 9, "§8Menu - Denuncias");
+        inventory = Bukkit.createInventory(null, 5 * 9, ReportGUIPlus.getStringLangConfig("ReportsInventory.name"));
 
         getPlayers();
 
@@ -60,19 +60,19 @@ public class ReportsInventory implements Listener {
                 String isOnline = "";
 
                 if(playerReported.isOnline()){
-                    isOnline = "§eJogador está online, botão direito para se teleportar até ele.";
+                    isOnline = ReportGUIPlus.getStringLangConfig("ReportsInventory.playerIsON");
                 }
 
                 ItemStack item = Heads.createSkullByNickname(playerReported.getName());
                 ItemMeta itemMeta = item.getItemMeta();
                 itemMeta.setDisplayName("§a" + playerReported.getName());
                 itemMeta.setLore(Arrays.asList(
-                        "§7Reportado por: §a" + playerReported.getName(),
-                        "§7Enviado em: §a" + new SimpleDateFormat("dd/MM/yyyy k:mm:ss").format(new Date(timestamp.getTime())),
-                        "§7Motivos da denuncia: §5" + reasons,
+                        ReportGUIPlus.getStringLangConfig("ReportsInventory.ReportedBy") + playerSender.getName(),
+                        ReportGUIPlus.getStringLangConfig("ReportsInventory.SendOn") + new SimpleDateFormat("dd/MM/yyyy k:mm:ss").format(new Date(timestamp.getTime())),
+                        ReportGUIPlus.getStringLangConfig("ReportsInventory.Reasons") + reasons,
                         "",
-                        "§7Use botão esquerdo para apagar a denuncia",
-                        "§7Use botão do meio para ver outras opções",
+                        ReportGUIPlus.getStringLangConfig("ReportsInventory.UseLeftClick"),
+                        ReportGUIPlus.getStringLangConfig("ReportsInventory.UseMiddleClick"),
                         "",
                         isOnline
                 ));
@@ -100,7 +100,7 @@ public class ReportsInventory implements Listener {
 
     @EventHandler
     public void ReportGUI(InventoryClickEvent e){
-        if(!e.getInventory().getName().equalsIgnoreCase("§8Menu - Denuncias")) return;
+        if(!e.getInventory().getName().equalsIgnoreCase(ReportGUIPlus.getStringLangConfig("ReportsInventory.name"))) return;
 
         if(inventory.getItem(e.getSlot()) == null) return;
 
@@ -112,13 +112,13 @@ public class ReportsInventory implements Listener {
         ItemMeta itemMeta = item.getItemMeta();
 
         Player playerReported = Bukkit.getPlayer(itemMeta.getDisplayName().replace("§a", ""));
-        Player playerSender = Bukkit.getPlayer(((String) itemMeta.getLore().toArray()[0]).replace("§7Reportado por: §a", ""));
+        Player playerSender = Bukkit.getPlayer(((String) itemMeta.getLore().toArray()[0]).replace(ReportGUIPlus.getStringLangConfig("ReportsInventory.ReportedBy"), ""));
 
         if(e.isRightClick()){
             if(playerReported.isOnline()){
                 player.teleport(playerReported);
             }else{
-                player.sendMessage(tag + " §fDesculpe, mas o jogador se encontra offline!");
+                player.sendMessage(tag + " " + ReportGUIPlus.getStringLangConfig("ReportsInventory.OfflinePlayer"));
             }
             return;
         }
@@ -129,7 +129,7 @@ public class ReportsInventory implements Listener {
         if(e.isLeftClick()){
 
             if(playerReported == null || playerSender == null){
-                player.sendMessage(tag + " §4Desculpe, algo deu errado!");
+                player.sendMessage(tag + " " + ReportGUIPlus.getStringLangConfig("ReportsInventory.error"));
                 return;
             }
 
@@ -144,7 +144,7 @@ public class ReportsInventory implements Listener {
                     ps.close();
 
                     player.closeInventory();
-                    player.sendMessage(tag + " §fDenuncia apagada com sucesso!");
+                    player.sendMessage(tag + " " + ReportGUIPlus.getStringLangConfig("ReportsInventory.SuccessfullyDelete"));
                     return;
                 }
             } catch (SQLException throwables) {

@@ -1,4 +1,5 @@
 mysql:
+  enabled: false
   host: 'localhost'
   username: 'root'
   password: ''
