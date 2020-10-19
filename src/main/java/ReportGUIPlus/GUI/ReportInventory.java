@@ -79,7 +79,11 @@ public class ReportInventory implements Listener {
 
     @EventHandler
     public void OnClose(InventoryCloseEvent e){
-        PlayerInteractEvent.getHandlerList().unregisterAll(this);
+        try {
+            PlayerInteractEvent.getHandlerList().unregisterAll(this);
+        }catch (Exception err){
+
+        }
     }
 
     @EventHandler

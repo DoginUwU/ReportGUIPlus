@@ -1,5 +1,8 @@
 package ReportGUIPlus.Utils;
 
+import ReportGUIPlus.ReportGUIPlus;
+import org.bukkit.Bukkit;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -19,8 +22,9 @@ public class MYSQL {
         this.table = table;
 
         try {
-            openConnection();
-            Statement statement = connection.createStatement();
+            if(openConnection()){
+                Statement statement = connection.createStatement();
+            }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -30,18 +34,26 @@ public class MYSQL {
         initDB();
     }
 
-    public void openConnection() throws SQLException, ClassNotFoundException {
+    public Boolean openConnection() throws SQLException, ClassNotFoundException {
         if (connection != null && !connection.isClosed()) {
-            return;
+            return true;
         }
 
         synchronized (this) {
             if (connection != null && !connection.isClosed()) {
-                return;
+                return true;
             }
-            Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.username, this.password);
+            try{
+                Class.forName("com.mysql.jdbc.Driver");
+                connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.username, this.password);
+            }catch (Exception err){
+                Bukkit.getConsoleSender().sendMessage("§4[ReportGUIPlus] Desculpe, nao foi possivel se conectar com o mysql! Cheque o arquivo config.yml.");
+                Bukkit.getPluginManager().disablePlugin(ReportGUIPlus.getInstance());
+                return false;
+            }
         }
+
+        return false;
     }
 
     public void closeConnection() {

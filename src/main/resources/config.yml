@@ -8,6 +8,7 @@ mysql:
 
 configs:
   tag: '&f[&cReport&f]'
+  recompense: 'money add %nick%' ##Quando o jogador for banido, o jogador que denunciou era receber uma recompensa
 
 texts:
   ReportUsage: '&4Uso incorreto! Use /report <jogador>'

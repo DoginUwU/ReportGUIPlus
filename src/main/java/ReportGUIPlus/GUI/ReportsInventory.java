@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -22,6 +23,7 @@ import java.util.UUID;
 public class ReportsInventory implements Listener {
     private Inventory inventory;
     private Player player;
+    private String reasons;
 
     public ReportsInventory(Player player) {
         this.player = player;
@@ -47,7 +49,7 @@ public class ReportsInventory implements Listener {
             while (resultSet.next()){
                 String userUUID = resultSet.getString("user");
                 String reportedUUID = resultSet.getString("reportedUUID");
-                String reasons = resultSet.getString("reasons");
+                reasons = resultSet.getString("reasons");
                 Timestamp timestamp = resultSet.getTimestamp("time");
 
                 reasons = reasons.replace("[", "").replace("]", "");
@@ -70,6 +72,7 @@ public class ReportsInventory implements Listener {
                         "§7Motivos da denuncia: §5" + reasons,
                         "",
                         "§7Use botão esquerdo para apagar a denuncia",
+                        "§7Use botão do meio para ver outras opções",
                         "",
                         isOnline
                 ));
@@ -88,7 +91,11 @@ public class ReportsInventory implements Listener {
 
     @EventHandler
     public void OnClose(InventoryCloseEvent e){
-        PlayerInteractEvent.getHandlerList().unregisterAll(this);
+        try {
+            PlayerInteractEvent.getHandlerList().unregisterAll(this);
+        }catch (Exception err){
+
+        }
     }
 
     @EventHandler
@@ -114,6 +121,10 @@ public class ReportsInventory implements Listener {
                 player.sendMessage(tag + " §fDesculpe, mas o jogador se encontra offline!");
             }
             return;
+        }
+        if(e.getClick() == ClickType.MIDDLE){
+            player.closeInventory();
+            new OptionsReportedInventory(player, playerReported, playerSender, reasons).getInventory();
         }
         if(e.isLeftClick()){
 
