@@ -43,7 +43,7 @@ public class OptionsReportedInventory implements Listener {
 
         createOptions(Material.ENDER_PEARL, (short)0,"§6§lTeleportar jogador", Collections.singletonList("§7Teleporte o player até você"),10);
         createOptions(Material.CHEST, (short)0,"§9§lVer inventario", Collections.singletonList("§7Veja o inventario do jogador selecionado"),12);
-        createOptions(Material.STAINED_CLAY, (short)14,"§c§lBanir jogador", Arrays.asList("§7Dê ban permanente no jogador", " §7* A rasão do ban será a mesma do reporte"),14);
+        createOptions(Material.STAINED_CLAY, (short)14,"§c§lBanir jogador", Arrays.asList("§7Dê ban permanente no jogador", " §7* A razão do ban será a mesma do reporte"),14);
         createOptions(Material.STAINED_CLAY, (short)13,"§a§lUsuario verificado", Arrays.asList("§7Use caso você tenha certeza que ele está legitmo", " §7* Uma mensagem de rejeição será enviada para o jogador que o reportou"),16);
     }
 
