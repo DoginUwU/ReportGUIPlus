@@ -57,7 +57,7 @@ public class MYSQL {
                 Bukkit.getConsoleSender().sendMessage("§a[ReportGUIPlus] Conexão MySQL Aberta!");
                 return true;
             }catch (Exception err){
-                Bukkit.getConsoleSender().sendMessage("§4[ReportGUIPlus] Desculpe, nao foi possivel se conectar com o mysql! Cheque o arquivo config.yml.");
+                Bukkit.getConsoleSender().sendMessage("§4[ReportGUIPlus] Desculpe, nao foi possivel se conectar com o mysql! §6Mudando para SQL.");
                 //Bukkit.getPluginManager().disablePlugin(ReportGUIPlus.getInstance());
                 openConnectionSQL();
                 return false;

@@ -33,6 +33,12 @@ public class ReportInventory implements Listener {
         this.player = player;
         this.reportedPlayer = reportedPlayer;
 
+        ConfigurationSection reports_ =  ReportGUIPlus.getInstance().getConfig().getConfigurationSection("reports");
+
+        if(reports_.getKeys(false).isEmpty()){
+            ReportGUIPlus.getInstance().reloadConfig();
+        }
+
         inventory = Bukkit.createInventory(null, 5 * 9, ReportGUIPlus.getStringLangConfig("ReportInventory.name"));
 
         AddReportsType();
@@ -65,6 +71,17 @@ public class ReportInventory implements Listener {
             item.setItemMeta(itemMeta);
             inventory.setItem(ReportGUIPlus.getInstance().getConfig().getInt("reports." + key + ".slot") - 1, item);
         }
+        if(player.hasPermission("reportguiplus.admin")){
+            ItemStack item = Heads.createSkullByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWZkZTNiZmNlMmQ4Y2I3MjRkZTg1NTZlNWVjMjFiN2YxNWY1ODQ2ODRhYjc4NTIxNGFkZDE2NGJlNzYyNGIifX19");
+            ItemMeta itemMeta = item.getItemMeta();
+
+            itemMeta.setDisplayName("§4" + "Reload plugin?");
+            itemMeta.setLore(Arrays.asList("§7Do you want to restart the plugin to check for new?", ""));
+
+
+            item.setItemMeta(itemMeta);
+            inventory.setItem(41, item);
+        }
     }
 
     public ReportInventory insertItens(ItemStack item, int slot){
@@ -96,6 +113,12 @@ public class ReportInventory implements Listener {
 
         ItemStack item = inventory.getItem(e.getSlot());
         ItemMeta itemMeta = item.getItemMeta();
+
+        if(String.valueOf(itemMeta.getDisplayName()).contains("§4" + "Reload plugin?")){
+            ReportGUIPlus.getInstance().reloadConfig();
+            player.closeInventory();
+            return;
+        }
 
         String tag = ReportGUIPlus.getInstance().getConfig().getString("configs.tag").replace("&", "§");
 

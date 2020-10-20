@@ -43,6 +43,7 @@ public class ReportGUIPlus extends JavaPlugin {
     private void LoadConfiguration(){
         getConfig().options().copyDefaults(false);
         saveDefaultConfig();
+        reloadConfig();
         langFile = new File(getDataFolder(), "/lang.yml");
         if(!langFile.exists()){
             try{
