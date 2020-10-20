@@ -34,7 +34,7 @@ public class ReportCommand implements CommandExecutor {
             player.sendMessage(ReportGUIPlus.getInstance().getConfig().getString("texts.UserNotFound").replace("&", "§"));
             return true;
         }
-        if(reportedPlayer.getUniqueId() != player.getUniqueId()){
+        if(reportedPlayer.getUniqueId() == player.getUniqueId()){
             player.sendMessage(ReportGUIPlus.getInstance().getConfig().getString("texts.ReportMe").replace("&", "§"));
             return true;
         }
